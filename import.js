@@ -6,8 +6,9 @@ const translatedCSV = fs.readFileSync("./input/text_translated.csv", {
   encoding: "utf8",
 });
 
+const removeString = translatedCSV.replace(/\r\n|\n|\r/g, '\n')
 converter
-  .csv2json(translatedCSV)
+  .csv2json(removeString)
   .then((result) => {
     // console.log(result);
     const finalObject = {
@@ -22,6 +23,7 @@ converter
     result.forEach((line) => {
       finalObject.TextExport.Texts[0].Text.push(line);
     });
+    // fs.writeFileSync('test.json', finalObject)
     const builder = new xml2js.Builder();
     const xml = builder.buildObject(finalObject);
     fs.writeFile("./output/text_translated.xml", xml, (err) => {
